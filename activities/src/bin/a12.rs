@@ -11,30 +11,67 @@
 // * Implement functionality on the box struct to print the characteristics
 
 enum Color {
-  Red,
-  Green,
-  Blue
+    Red,
+    Green,
+    Blue,
+}
+
+impl Color {
+    fn print(&self) {
+        match self {
+            Color::Red => println!("red"),
+            Color::Green => println!("green"),
+            Color::Blue => println!("blue"),
+        }
+    }
+}
+
+struct Dimensions {
+    width: f64,
+    height: f64,
+    depth: f64,
+}
+
+impl Dimensions {
+    fn print(&self) {
+        println!(
+            "Dimensions: {:?}, {:?}, {:?}",
+            self.width, self.height, self.depth
+        );
+    }
 }
 
 struct Box {
-  dimensions: (i32, i32, i32), // width, height, depth
-  weight: i32,
-  color: Color
+    dimensions: Dimensions,
+    weight: f64,
+    color: Color,
 }
 
 impl Box {
-  fn create_box() -> Self {
-    Self { dimensions: (2, 2, 2), weight: 10, color: Color::Red }
-  }
+    fn create(dimensions: Dimensions, weight: f64, color: Color) -> Self {
+        Self {
+            dimensions,
+            weight,
+            color,
+        }
+    }
 
-  fn print_box(&self) {
-    println!("Dimensions: {:?}", self.dimensions);
-    println!("Weight: {:?}", self.weight);
-    // println!("Color: {:?}", self.color);
-  }
+    fn print(&self) {
+        self.dimensions.print();
+        self.color.print();
+        println!("Weight: {:?}", self.weight);
+    }
 }
 
 fn main() {
-  let my_box = Box::create_box();
-  my_box.print_box();
+    let my_box = Box::create(
+        Dimensions {
+            width: 2.0,
+            height: 2.0,
+            depth: 2.0,
+        },
+        20.0,
+        Color::Blue,
+    );
+    my_box.print();
 }
