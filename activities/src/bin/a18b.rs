@@ -35,7 +35,7 @@ enum Position {
 
 enum Status {
     Active,
-    Terminated
+    Terminated,
 }
 
 struct Employee {
@@ -54,7 +54,7 @@ fn try_access(employee: &Employee) -> Result<(), String> {
         Position::MaintenanceCrew => Ok(()),
         Position::MarketingDepartment => Ok(()),
         Position::Manager => Ok(()),
-        _ => Err("invalid position".to_owned())
+        _ => Err("invalid position".to_owned()),
     }
 }
 
@@ -72,6 +72,6 @@ fn main() {
     };
     match print_access(&technician) {
         Err(e) => println!("access denied: {:?}", e),
-        _ => ()
+        _ => (),
     }
 }
