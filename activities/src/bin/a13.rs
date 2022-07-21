@@ -20,5 +20,5 @@ fn main() {
     }
   }
 
-  println!("length: {:?}", &nums.len());
+  println!("length: {:?}", nums.len());
 }
