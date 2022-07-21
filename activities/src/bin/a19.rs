@@ -22,11 +22,14 @@ fn main() {
     items.insert("Table", 2);
     items.insert("Couch", 0);
 
+    let mut total_stock = 0;
     for (item, qty) in items.iter() {
+        total_stock += qty;
         let stock_count = match qty {
             0 => format!("{:?} is out of stock", item),
             s => format!("{:?} has {:?} items in stock", item, s),
         };
         println!("item={:?}", stock_count);
     }
+    println!("total stock={:?}", total_stock);
 }
