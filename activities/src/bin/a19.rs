@@ -17,15 +17,16 @@ use std::collections::HashMap;
 
 fn main() {
     let mut items = HashMap::new();
-    items.insert("chairs", 5);
-    items.insert("beds", 3);
-    items.insert("tables", 2);
-    items.insert("couches", 0);
+    items.insert("Chair", 5);
+    items.insert("Bed", 3);
+    items.insert("Table", 2);
+    items.insert("Couch", 0);
 
-    for (item, stock_count) in items.iter() {
-        match stock_count {
-            0 => println!("{:?} is out of stock", item),
-            s => println!("{:?} has {:?} items in stock", item, s),
-        }
+    for (item, qty) in items.iter() {
+        let stock_count = match qty {
+            0 => format!("{:?} is out of stock", item),
+            s => format!("{:?} has {:?} items in stock", item, s),
+        };
+        println!("item={:?}", stock_count);
     }
 }
