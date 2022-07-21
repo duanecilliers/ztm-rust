@@ -15,11 +15,11 @@ struct Customer {
   age: i32
 }
 
-fn try_purchase(customer: &Customer) -> Result<bool, String> {
+fn try_purchase(customer: &Customer) -> Result<(), String> {
   if customer.age < 21 {
     return Err("Under age".to_owned());
   } else {
-    return Ok(true);
+    return Ok(());
   }
 }
 
