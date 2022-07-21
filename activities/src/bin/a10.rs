@@ -14,8 +14,8 @@
 
 fn print_message(is_greater: bool) {
   match is_greater {
-    true => println!("> 100"),
-    _ => println!("<= 100")
+    true => println!("it's big"),
+    _ => println!("it's small")
   }
 }
 fn main() {
