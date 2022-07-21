@@ -59,7 +59,7 @@ fn try_access(employee: &Employee) -> Result<(), String> {
 }
 
 fn print_access(employee: &Employee) -> Result<(), String> {
-    let attempt_access = try_access(employee)?;
+    try_access(employee)?;
     println!("Access granted!");
     Ok(())
 }
