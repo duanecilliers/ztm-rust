@@ -24,11 +24,9 @@ fn main() {
   ];
 
   for student in students {
-    match student {
-      Student { name, locker } => match locker {
-        Some(l) => println!("{:?} is assigned locked #{:?}", name, l),
-        None => println!("{:?} is not assigned a locker!", name)
-      }
+    match student.locker {
+      Some(l) => println!("{:?} is assigned locked #{:?}", student.name, l),
+      None => println!("{:?} is not assigned a locker!", student.name)
     }
   };
 }
