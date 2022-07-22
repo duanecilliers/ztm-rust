@@ -33,46 +33,39 @@ enum PowerState {
     Hibernate,
 }
 
-fn get_input() -> io::Result<String> {
-    let mut buffer = String::new();
-    io::stdin().read_line(&mut buffer)?;
-    Ok(buffer.trim().to_owned())
-}
-
-fn print_msg(state: PowerState) {
-    match state {
-        PowerState::Off => println!("turning off"),
-        PowerState::Sleep => println!("going to sleep"),
-        PowerState::Reboot => println!("rebooting system"),
-        PowerState::Shutdown => println!("shutting down"),
-        PowerState::Hibernate => println!("Going into hybernation"),
+impl PowerState {
+    fn new(state: &str) -> Option<PowerState> {
+        match state.trim().to_lowercase().as_str() {
+            "off" => Some(PowerState::Off),
+            "sleep" => Some(PowerState::Sleep),
+            "reboot" => Some(PowerState::Reboot),
+            "shutdown" => Some(PowerState::Shutdown),
+            "hibernate" => Some(PowerState::Hibernate),
+            _ => None,
+        }
     }
 }
 
-fn map_input(input: String) -> Result<PowerState, String> {
-    match input.to_lowercase().as_str() {
-        "off" => Ok(PowerState::Off),
-        "sleep" => Ok(PowerState::Sleep),
-        "reboot" => Ok(PowerState::Reboot),
-        "shutdown" => Ok(PowerState::Shutdown),
-        "hibernate" => Ok(PowerState::Hibernate),
-        _ => Err("invalid command, please select one of 'Off', 'Sleep', 'Reboot', 'Shutdown', 'Hibernate'"
-            .to_owned()),
+fn print_msg(state: PowerState) {
+    use PowerState::*;
+    match state {
+        Off => println!("turning off"),
+        Sleep => println!("going to sleep"),
+        Reboot => println!("rebooting system"),
+        Shutdown => println!("shutting down"),
+        Hibernate => println!("Going into hybernation"),
     }
 }
 
 fn main() {
-    let mut received_command = false;
-    while !received_command {
-        match get_input() {
-            Ok(input) => match map_input(input) {
-                Ok(state) => {
-                    received_command = true;
-                    print_msg(state)
-                }
-                Err(e) => println!("error: {:?}", e),
-            },
-            Err(e) => println!("error: {:?}", e),
+    let mut buffer = String::new();
+    let user_input = io::stdin().read_line(&mut buffer);
+    if user_input.is_ok() {
+        match PowerState::new(&buffer) {
+            Some(state) => print_msg(state),
+            None => println!("invalid command"),
         }
+    } else {
+        println!("error reading input")
     }
 }
