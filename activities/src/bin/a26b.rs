@@ -15,38 +15,42 @@
 // * After moving the functions into modules, try running
 //   `cargo check --bin a26b` to get a listing of required code changes
 
-fn trim(msg: &str) -> &str {
-    msg.trim()
-}
+mod msg {
+    pub(crate) fn trim(msg: &str) -> &str {
+        msg.trim()
+    }
 
-fn capitalize(msg: &str) -> std::borrow::Cow<'_, str> {
-    if let Some(letter) = msg.get(0..1) {
-        format!("{}{}", letter.to_uppercase(), &msg[1..msg.len()]).into()
-    } else {
-        msg.into()
+    pub(crate) fn capitalize(msg: &str) -> std::borrow::Cow<'_, str> {
+        if let Some(letter) = msg.get(0..1) {
+            format!("{}{}", letter.to_uppercase(), &msg[1..msg.len()]).into()
+        } else {
+            msg.into()
+        }
+    }
+
+    pub(crate) fn exciting(msg: &str) -> String {
+        format!("{}!", msg)
     }
 }
 
-fn exciting(msg: &str) -> String {
-    format!("{}!", msg)
-}
-
-fn add(lhs: isize, rhs: isize) -> isize {
-    lhs + rhs
-}
-fn sub(lhs: isize, rhs: isize) -> isize {
-    lhs - rhs
-}
-fn mul(lhs: isize, rhs: isize) -> isize {
-    lhs * rhs
+mod math {
+    pub(crate) fn add(lhs: isize, rhs: isize) -> isize {
+        lhs + rhs
+    }
+    pub(crate) fn sub(lhs: isize, rhs: isize) -> isize {
+        lhs - rhs
+    }
+    pub(crate) fn mul(lhs: isize, rhs: isize) -> isize {
+        lhs * rhs
+    }
 }
 
 fn main() {
     // Part 1: math functions
     let result = {
-        let two_plus_two = add(2, 2);
-        let three = sub(two_plus_two, 1);
-        mul(three, three)
+        let two_plus_two = math::add(2, 2);
+        let three = math::sub(two_plus_two, 1);
+        math::mul(three, three)
     };
 
     // Ensure we have a correct result.
@@ -56,12 +60,12 @@ fn main() {
     // Part 2: string functions
     let hello = {
         let msg = "hello ";
-        let msg = trim(msg);
-        capitalize(msg)
+        let msg = msg::trim(msg);
+        msg::capitalize(msg)
     };
     let world = {
         let msg = "world";
-        exciting(msg)
+        msg::exciting(msg)
     };
     let msg = format!("{}, {}", hello, world);
 
