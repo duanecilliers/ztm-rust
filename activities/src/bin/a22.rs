@@ -28,7 +28,7 @@ fn div(a: i32, b: i32) -> Option<i32> {
 
 /// Takes two strings and places them immediately one after another.
 fn concat(first: &str, second: &str) -> String {
-    format!("{} {}", first, second)
+    format!("{}{}", first, second)
 }
 
 fn main() {}
@@ -52,13 +52,13 @@ mod test {
     #[test]
     fn test_concat() {
         assert_eq!(
-            concat!("hello", "there"),
-            "hellothere",
+            concat("hello", "there"),
+            String::from("hellothere"),
             "should concat 'hello' and 'there'"
         );
         assert_eq!(
-            concat!("why, hello", "there"),
-            "why, hellothere",
+            concat("why, hello", "there"),
+            String::from("why, hellothere"),
             "should concat 'why, hello' and 'there'"
         );
     }
