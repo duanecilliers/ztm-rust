@@ -46,34 +46,26 @@ impl PowerState {
     }
 }
 
-fn get_input() -> io::Result<String> {
-    let mut buffer = String::new();
-    io::stdin().read_line(&mut buffer)?;
-    Ok(buffer.trim().to_owned())
-}
-
 fn print_msg(state: PowerState) {
+    use PowerState::*;
     match state {
-        PowerState::Off => println!("turning off"),
-        PowerState::Sleep => println!("going to sleep"),
-        PowerState::Reboot => println!("rebooting system"),
-        PowerState::Shutdown => println!("shutting down"),
-        PowerState::Hibernate => println!("Going into hybernation"),
+        Off => println!("turning off"),
+        Sleep => println!("going to sleep"),
+        Reboot => println!("rebooting system"),
+        Shutdown => println!("shutting down"),
+        Hibernate => println!("Going into hybernation"),
     }
 }
 
 fn main() {
-    let mut received_command = false;
-    while !received_command {
-        match get_input() {
-            Ok(input) => match PowerState::new(&input) {
-                Some(state) => {
-                    received_command = true;
-                    print_msg(state)
-                }
-                None => println!("Invalid command"),
-            },
-            Err(e) => println!("error: {:?}", e),
+    let mut buffer = String::new();
+    let user_input = io::stdin().read_line(&mut buffer);
+    if user_input.is_ok() {
+        match PowerState::new(&buffer) {
+            Some(state) => print_msg(state),
+            None => println!("invalid command"),
         }
+    } else {
+        println!("error reading input")
     }
 }
