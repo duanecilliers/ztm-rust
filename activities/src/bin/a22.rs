@@ -32,3 +32,34 @@ fn concat(first: &str, second: &str) -> String {
 }
 
 fn main() {}
+
+#[cfg(test)]
+mod test {
+    use crate::*;
+
+    #[test]
+    fn test_clamp() {
+        assert_eq!(clamp(12, 10, 20), 12, "Should be 12");
+        assert_eq!(clamp(8, 10, 20), 10, "Should be 10");
+    }
+
+    #[test]
+    fn test_div() {
+        assert_eq!(div(9, 3), Some(3), "9 / 3 = 3");
+        assert_eq!(div(1200, 12), Some(100), "1200 / 12 = 100");
+    }
+
+    #[test]
+    fn test_concat() {
+        assert_eq!(
+            concat!("hello", "there"),
+            "hellothere",
+            "should concat 'hello' and 'there'"
+        );
+        assert_eq!(
+            concat!("why, hello", "there"),
+            "why, hellothere",
+            "should concat 'why, hello' and 'there'"
+        );
+    }
+}
