@@ -11,7 +11,7 @@
 use chrono::prelude::*;
 
 fn main() {
-    let date = Utc::now();
+    let date = Local::now();
     let formatted_date = date.format("%Y-%m-%d %H:%M:%S").to_string();
     println!("{:?}", formatted_date);
 }
