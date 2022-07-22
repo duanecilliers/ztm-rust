@@ -23,6 +23,9 @@ fn clamp(n: i32, lower: i32, upper: i32) -> i32 {
 
 /// Divides a and b.
 fn div(a: i32, b: i32) -> Option<i32> {
+    if b == 0 {
+        return Some(0);
+    }
     Some(a / b)
 }
 
@@ -45,6 +48,7 @@ mod test {
 
     #[test]
     fn test_div() {
+        assert_eq!(div(2, 0), Some(0), "2 / 0 = 0");
         assert_eq!(div(9, 3), Some(3), "9 / 3 = 3");
         assert_eq!(div(1200, 12), Some(100), "1200 / 12 = 100");
     }
