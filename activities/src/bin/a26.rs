@@ -8,4 +8,10 @@
 // * (OPTIONAL) Read the documentation section `Formatting and Parsing`
 //   for examples on how to create custom time formats
 
-fn main() {}
+use chrono::prelude::*;
+
+fn main() {
+    let date = Utc::now();
+    let formatted_date = date.format("%Y-%m-%d %H:%M:%S").to_string();
+    println!("{:?}", formatted_date);
+}
