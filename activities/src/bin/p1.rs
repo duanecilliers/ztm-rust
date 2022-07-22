@@ -59,6 +59,16 @@ impl Bills {
     fn remove(&mut self, name: &str) -> bool {
         self.inner.remove(name).is_some()
     }
+
+    fn update(&mut self, name: &str, amount: f64) -> bool {
+        match self.inner.get_mut(name) {
+            Some(bill) => {
+                bill.amount = amount;
+                true
+            }
+            None => false,
+        }
+    }
 }
 
 fn get_input() -> Option<String> {
@@ -132,6 +142,26 @@ mod menu {
             println!("bill no found");
         }
     }
+
+    pub fn update_bill(bills: &mut Bills) {
+        for bill in bills.get_all() {
+            println!("{:?}", bill);
+        }
+        println!("Enter a bill to update:");
+        let name = match get_input() {
+            Some(name) => name,
+            None => return,
+        };
+        let amount = match get_bill_amount() {
+            Some(amount) => amount,
+            None => return,
+        };
+        if bills.update(&name, amount) {
+            println!("updated");
+        } else {
+            println!("bill not found");
+        }
+    }
 }
 
 #[derive(Debug)]
@@ -139,6 +169,7 @@ enum MainMenu {
     AddBill,
     ViewBill,
     RemoveBill,
+    UpdateBill,
 }
 
 impl MainMenu {
@@ -147,6 +178,7 @@ impl MainMenu {
             "1" => Some(Self::AddBill),
             "2" => Some(Self::ViewBill),
             "3" => Some(Self::RemoveBill),
+            "4" => Some(Self::UpdateBill),
             _ => None,
         }
     }
@@ -158,6 +190,7 @@ impl MainMenu {
         println!("1. Add Bill");
         println!("2. View Bills");
         println!("3. Remove Bills");
+        println!("4. Update Bill");
         println!("");
         println!("Enter selection: ");
     }
@@ -173,6 +206,7 @@ fn main() {
             Some(MainMenu::AddBill) => menu::add_bill(&mut bills),
             Some(MainMenu::ViewBill) => menu::view_bills(&bills),
             Some(MainMenu::RemoveBill) => menu::remove_bill(&mut bills),
+            Some(MainMenu::UpdateBill) => menu::update_bill(&mut bills),
             None => return,
         }
     }
