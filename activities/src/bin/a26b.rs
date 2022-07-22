@@ -58,18 +58,21 @@ fn main() {
     println!("(2 + 2 - 1) * 3 = {}", result);
 
     // Part 2: string functions
-    let hello = {
-        let msg = "hello ";
-        let msg = msg::trim(msg);
-        msg::capitalize(msg)
-    };
-    let world = {
-        let msg = "world";
-        msg::exciting(msg)
-    };
-    let msg = format!("{}, {}", hello, world);
+    {
+        use msg::{capitalize, exciting, trim};
+        let hello = {
+            let msg = "hello ";
+            let msg = trim(msg);
+            capitalize(msg)
+        };
+        let world = {
+            let msg = "world";
+            exciting(msg)
+        };
+        let msg = format!("{}, {}", hello, world);
 
-    // Ensure we have a correct result.
-    assert_eq!(&msg, "Hello, world!");
-    println!("{}", msg);
+        // Ensure we have a correct result.
+        assert_eq!(&msg, "Hello, world!");
+        println!("{}", msg);
+    }
 }
