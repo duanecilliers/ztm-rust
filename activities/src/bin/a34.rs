@@ -16,66 +16,63 @@
 // Notes:
 // * Optionally use generics for each state
 
+#[derive(Debug, Clone, Copy)]
+struct LuggageId(usize);
+struct Luggage(LuggageId);
+
 #[derive(Debug)]
-struct Luggage<Status> {
-    id: f32,
-    status: Status,
-}
-impl<Status> Luggage<Status> {
-    fn transition<NextStatus>(self, status: NextStatus) -> Luggage<NextStatus> {
-        Luggage {
-            id: self.id,
-            status: status,
-        }
+struct CheckIn(LuggageId);
+
+#[derive(Debug)]
+struct OnLoad(LuggageId);
+
+#[derive(Debug)]
+struct OffLoad(LuggageId);
+
+#[derive(Debug)]
+struct AwaitingPickup(LuggageId);
+
+#[derive(Debug)]
+struct EndCustody(LuggageId);
+
+impl Luggage {
+    fn new(id: LuggageId) -> Self {
+        Luggage(id)
+    }
+
+    fn check_in(self) -> CheckIn {
+        CheckIn(self.0)
     }
 }
 
-impl Luggage<CheckIn> {
-    fn new(id: f32) -> Self {
-        Self {
-            id,
-            status: CheckIn,
-        }
-    }
-    fn checkin(self) -> Luggage<OnLoading> {
-        self.transition(OnLoading)
+impl CheckIn {
+    fn onload(self) -> OnLoad {
+        OnLoad(self.0)
     }
 }
 
-impl Luggage<OnLoading> {
-    fn load(self) -> Luggage<OffLoading> {
-        self.transition(OffLoading)
+impl OnLoad {
+    fn off_load(self) -> OffLoad {
+        OffLoad(self.0)
     }
 }
 
-impl Luggage<OffLoading> {
-    fn pickup(self) -> Luggage<AwaitingPickup> {
-        self.transition(AwaitingPickup)
+impl OffLoad {
+    fn carousel(self) -> AwaitingPickup {
+        AwaitingPickup(self.0)
     }
 }
 
-impl Luggage<AwaitingPickup> {
-    fn end_custody(self) -> Luggage<EndCustody> {
-        self.transition(EndCustody)
+impl AwaitingPickup {
+    fn pickup(self) -> (Luggage, EndCustody) {
+        (Luggage(self.0), EndCustody(self.0))
     }
 }
-
-#[derive(Debug)]
-struct CheckIn;
-
-#[derive(Debug)]
-struct OnLoading;
-
-#[derive(Debug)]
-struct OffLoading;
-
-#[derive(Debug)]
-struct AwaitingPickup;
-
-#[derive(Debug)]
-struct EndCustody;
 
 fn main() {
-    let processed_luggage = Luggage::new(1.0).checkin().load().pickup().end_custody();
-    println!("Luggage: {:?}", processed_luggage)
+    let id = LuggageId(1);
+    let luggage = Luggage::new(id);
+    let luggage = luggage.check_in().onload().off_load().carousel();
+    let (luggage, _) = luggage.pickup();
+    // println!("Luggage: {:?}", luggage)
 }
