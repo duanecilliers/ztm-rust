@@ -12,4 +12,38 @@
 
 const MOCK_DATA: &'static str = include_str!("mock-data.csv");
 
-fn main() {}
+#[derive(Debug)]
+struct Person<'a> {
+    name: &'a str,
+    title: &'a str,
+}
+
+fn parse_csv_rows(data: &str) -> Vec<&str> {
+    data.split("\n").collect()
+}
+
+fn parse_csv_cols(rows: Vec<&str>) -> Vec<Vec<&str>> {
+    rows.iter().map(|row| row.split(",").collect()).collect()
+}
+
+fn collect_people(data: Vec<Vec<&str>>) -> Vec<Person> {
+    data.iter()
+        .map(|row| Person {
+            name: row[1],
+            title: row[4],
+        })
+        .collect()
+}
+
+fn main() {
+    // println!("{:?}", MOCK_DATA);
+    // println!("{:?}", parse_csv_rows(MOCK_DATA));
+    let rows = parse_csv_rows(MOCK_DATA);
+    // println!("{:?}", parse_csv_cols(rows));
+    let data = parse_csv_cols(rows);
+    println!("{:?}", data);
+    let people = collect_people(data);
+    for person in people.iter() {
+        println!("Person: {:?}", person);
+    }
+}
