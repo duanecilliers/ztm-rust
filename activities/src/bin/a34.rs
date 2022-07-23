@@ -16,4 +16,66 @@
 // Notes:
 // * Optionally use generics for each state
 
-fn main() {}
+#[derive(Debug)]
+struct Luggage<Status> {
+    id: f32,
+    status: Status,
+}
+impl<Status> Luggage<Status> {
+    fn transition<NextStatus>(self, status: NextStatus) -> Luggage<NextStatus> {
+        Luggage {
+            id: self.id,
+            status: status,
+        }
+    }
+}
+
+impl Luggage<CheckIn> {
+    fn new(id: f32) -> Self {
+        Self {
+            id,
+            status: CheckIn,
+        }
+    }
+    fn checkin(self) -> Luggage<OnLoading> {
+        self.transition(OnLoading)
+    }
+}
+
+impl Luggage<OnLoading> {
+    fn load(self) -> Luggage<OffLoading> {
+        self.transition(OffLoading)
+    }
+}
+
+impl Luggage<OffLoading> {
+    fn pickup(self) -> Luggage<AwaitingPickup> {
+        self.transition(AwaitingPickup)
+    }
+}
+
+impl Luggage<AwaitingPickup> {
+    fn end_custody(self) -> Luggage<EndCustody> {
+        self.transition(EndCustody)
+    }
+}
+
+#[derive(Debug)]
+struct CheckIn;
+
+#[derive(Debug)]
+struct OnLoading;
+
+#[derive(Debug)]
+struct OffLoading;
+
+#[derive(Debug)]
+struct AwaitingPickup;
+
+#[derive(Debug)]
+struct EndCustody;
+
+fn main() {
+    let processed_luggage = Luggage::new(1.0).checkin().load().pickup().end_custody();
+    println!("Luggage: {:?}", processed_luggage)
+}
