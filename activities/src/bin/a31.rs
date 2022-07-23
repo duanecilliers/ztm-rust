@@ -19,4 +19,49 @@
 // * Use a function to calculate the total cost
 // * Process at least 3 different materials
 
-fn main() {}
+trait Material {
+    fn get_price(&self, meters: f64) -> f64;
+}
+
+struct Carpet {
+    price: f64,
+}
+impl Material for Carpet {
+    fn get_price(&self, meters: f64) -> f64 {
+        self.price * meters
+    }
+}
+
+struct Tile {
+    price: f64,
+}
+impl Material for Tile {
+    fn get_price(&self, meters: f64) -> f64 {
+        self.price * meters
+    }
+}
+
+struct Wood {
+    price: f64,
+}
+impl Material for Wood {
+    fn get_price(&self, meters: f64) -> f64 {
+        self.price * meters
+    }
+}
+
+fn get_total_cost(materials: Vec<Box<dyn Material>>, meters: f64) -> f64 {
+    let mut total = 0.0;
+    for material in materials {
+        total += material.get_price(meters)
+    }
+    total
+}
+
+fn main() {
+    let carpet = Box::new(Carpet { price: 10.0 });
+    let tile = Box::new(Tile { price: 15.0 });
+    let wood = Box::new(Wood { price: 15.0 });
+    let materials: Vec<Box<dyn Material>> = vec![carpet, tile, wood];
+    println!("Total cost: {:?}", get_total_cost(materials, 20.0))
+}
