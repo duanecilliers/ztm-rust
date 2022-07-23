@@ -55,23 +55,20 @@ enum Tile {
 }
 
 fn message_match(tile: Tile) {
+    use Tile::*;
     match tile {
-        Tile::Brick(style) if style == BrickStyle::Gray || style == BrickStyle::Red => {
-            println!("The brick color is {:?}", &style)
+        // Brick(style) if style == BrickStyle::Gray || style == BrickStyle::Red => {
+        Brick(brick @ BrickStyle::Gray | brick @ BrickStyle::Red) => {
+            println!("The brick color is {:?}", brick)
         }
-        Tile::Brick(style) => {
-            println!("{:?} brick", style)
-        }
-        Tile::Water(pressure) if pressure >= Pressure(10) => {
-            println!("High water pressure!");
-        }
-        Tile::Water(pressure) => {
-            println!("Water pressure level: {:?}", pressure);
-        }
-        Tile::Grass | Tile::Dirt | Tile::Sand => {
-            println!("Ground tile");
-        }
-        Tile::Treasure(chest) if (chest.amount >= 100 && chest.content == TreasureItem::Gold) => {
+        Brick(style) => println!("{:?} brick", style),
+        Water(pressure) if pressure >= Pressure(10) => println!("High water pressure!"),
+        Water(pressure) => println!("Water pressure level: {:?}", pressure),
+        Grass | Dirt | Sand => println!("Ground tile"),
+        // Treasure(chest) if (chest.amount >= 100 && chest.content == TreasureItem::Gold) => {
+        Treasure(TreasureChest { amount, content })
+            if amount >= 100 && content == TreasureItem::Gold =>
+        {
             println!("Lots of gold!")
         }
         _ => (),
@@ -79,6 +76,8 @@ fn message_match(tile: Tile) {
 }
 
 fn main() {
+    let red_brick = Tile::Brick(BrickStyle::Red);
+    message_match(red_brick);
     let dungeon_brick = Tile::Brick(BrickStyle::Dungeon);
     message_match(dungeon_brick);
     let high_pressure_water = Tile::Water(Pressure(20));
