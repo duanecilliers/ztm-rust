@@ -12,38 +12,35 @@
 
 const MOCK_DATA: &'static str = include_str!("mock-data.csv");
 
-#[derive(Debug)]
-struct Person<'a> {
-    name: &'a str,
-    title: &'a str,
+struct Names<'a> {
+    inner: Vec<&'a str>,
+}
+
+struct Titles<'a> {
+    inner: Vec<&'a str>,
 }
 
 fn parse_csv_rows(data: &str) -> Vec<&str> {
-    data.split("\n").collect()
-}
-
-fn parse_csv_cols(rows: Vec<&str>) -> Vec<Vec<&str>> {
-    rows.iter().map(|row| row.split(",").collect()).collect()
-}
-
-fn collect_people(data: Vec<Vec<&str>>) -> Vec<Person> {
-    data.iter()
-        .map(|row| Person {
-            name: row[1],
-            title: row[4],
-        })
-        .collect()
+    data.split("\n").skip(1).collect()
 }
 
 fn main() {
-    // println!("{:?}", MOCK_DATA);
-    // println!("{:?}", parse_csv_rows(MOCK_DATA));
-    let rows = parse_csv_rows(MOCK_DATA);
-    // println!("{:?}", parse_csv_cols(rows));
-    let data = parse_csv_cols(rows);
-    println!("{:?}", data);
-    let people = collect_people(data);
-    for person in people.iter() {
-        println!("Person: {:?}", person);
+    let data = parse_csv_rows(MOCK_DATA);
+    let names: Vec<_> = data
+        .iter()
+        .filter_map(|line| line.split(',').nth(1))
+        .collect();
+    let names = Names { inner: names };
+
+    let titles: Vec<_> = data
+        .iter()
+        .filter_map(|line| line.split(',').nth(4))
+        .collect();
+    let titles = Titles { inner: titles };
+
+    let data = names.inner.iter().zip(titles.inner.iter());
+
+    for d in data.take(10) {
+        println!("Name: {:?}, title: {:?}", d.0, d.1)
     }
 }
