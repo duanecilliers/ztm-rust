@@ -20,48 +20,51 @@
 // * Process at least 3 different materials
 
 trait Material {
-    fn get_price(&self, meters: f64) -> f64;
+    fn cost_por_sq_meter(&self) -> f64;
+    fn square_meters(&self) -> f64;
+    fn total_cost(&self) -> f64 {
+        self.cost_por_sq_meter() * self.square_meters()
+    }
 }
 
-struct Carpet {
-    price: f64,
-}
+struct Carpet(f64);
 impl Material for Carpet {
-    fn get_price(&self, meters: f64) -> f64 {
-        self.price * meters
+    fn cost_por_sq_meter(&self) -> f64 {
+        10.0
+    }
+    fn square_meters(&self) -> f64 {
+        self.0
     }
 }
-
-struct Tile {
-    price: f64,
-}
+struct Tile(f64);
 impl Material for Tile {
-    fn get_price(&self, meters: f64) -> f64 {
-        self.price * meters
+    fn cost_por_sq_meter(&self) -> f64 {
+        15.0
+    }
+    fn square_meters(&self) -> f64 {
+        self.0
     }
 }
-
-struct Wood {
-    price: f64,
-}
+struct Wood(f64);
 impl Material for Wood {
-    fn get_price(&self, meters: f64) -> f64 {
-        self.price * meters
+    fn cost_por_sq_meter(&self) -> f64 {
+        20.0
+    }
+    fn square_meters(&self) -> f64 {
+        self.0
     }
 }
 
-fn get_total_cost(materials: Vec<Box<dyn Material>>, meters: f64) -> f64 {
-    let mut total = 0.0;
-    for material in materials {
-        total += material.get_price(meters)
-    }
-    total
+fn total_cost(material: &Vec<Box<dyn Material>>) -> f64 {
+    material.iter().map(|mat| mat.total_cost()).sum()
 }
 
 fn main() {
-    let carpet = Box::new(Carpet { price: 10.0 });
-    let tile = Box::new(Tile { price: 15.0 });
-    let wood = Box::new(Wood { price: 15.0 });
+    let carpet = Box::new(Carpet(20.0));
+    let tile = Box::new(Tile(10.0));
+    let wood = Box::new(Wood(30.0));
+
     let materials: Vec<Box<dyn Material>> = vec![carpet, tile, wood];
-    println!("Total cost: {:?}", get_total_cost(materials, 20.0))
+    let total = total_cost(&materials);
+    println!("Total cost: {:?}", total);
 }
