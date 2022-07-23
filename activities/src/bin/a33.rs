@@ -9,9 +9,7 @@
 // * If both strings are the same length, the first one should be returned
 
 fn longest<'a>(str1: &'a str, str2: &'a str) -> &'a str {
-    if str1.len() == str2.len() {
-        return str1;
-    } else if str1.len() > str2.len() {
+    if str1 > str2 {
         return str1;
     } else {
         return str2;
