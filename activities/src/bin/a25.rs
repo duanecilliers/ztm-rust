@@ -17,13 +17,11 @@ trait Shape {
 }
 
 struct Square {
-    width: i32,
-    height: i32,
-    depth: i32,
+    side: i32,
 }
 impl Shape for Square {
     fn perimeter(&self) {
-        println!("The square's perimeter is {:?}", &self.height * 4);
+        println!("The square's perimeter is {:?}", &self.side * 4);
     }
 }
 
@@ -46,10 +44,6 @@ fn print_perimeter(shape: impl Shape) {
 }
 
 fn main() {
-    print_perimeter(Square {
-        width: 2,
-        height: 2,
-        depth: 2,
-    });
+    print_perimeter(Square { side: 2 });
     print_perimeter(Triangle { a: 2, b: 2, c: 2 });
 }
