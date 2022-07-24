@@ -29,8 +29,8 @@ enum LightMsg {
     // Add additional variants needed to complete the exercise
     ChangeColor(u8, u8, u8),
     Disconnect,
-    TurnOn,
-    TurnOff,
+    On,
+    Off,
 }
 
 enum LightStatus {
@@ -40,33 +40,40 @@ enum LightStatus {
 
 fn spawn_light_thread(receiver: Receiver<LightMsg>) -> JoinHandle<LightStatus> {
     // Add code here to spawn a thread to control the light bulb
-    let handle = thread::spawn(move || loop {
-        match receiver.recv() {
-            Ok(msg) => match msg {
-                LightMsg::ChangeColor(r, g, b) => {
-                    println!("{}", "The color changed".truecolor(r, g, b));
-                    LightStatus::On;
+    let handle = thread::spawn(move || {
+        let mut light_status = LightStatus::Off;
+        loop {
+            if let Ok(msg) = receiver.recv() {
+                match msg {
+                    LightMsg::ChangeColor(r, g, b) => {
+                        println!("{}", "The color changed".truecolor(r, g, b));
+                        match light_status {
+                            LightStatus::Off => println!("Light is off"),
+                            LightStatus::On => println!("Light is on"),
+                        }
+                    }
+                    LightMsg::On => {
+                        println!("Turned light on");
+                        light_status = LightStatus::On;
+                    }
+                    LightMsg::Off => {
+                        println!("Turned light off");
+                        light_status = LightStatus::Off;
+                    }
+                    LightMsg::Disconnect => {
+                        println!("disconnecting");
+                        light_status = LightStatus::Off;
+                        break;
+                    }
                 }
-                LightMsg::Disconnect => {
-                    println!("Disconnect");
-                    break LightStatus::Off;
-                }
-                LightMsg::TurnOn => {
-                    println!("Turn on");
-                    LightStatus::On;
-                }
-                LightMsg::TurnOff => {
-                    println!("Turn off");
-                    break LightStatus::Off;
-                }
-            },
-            Err(e) => {
-                println!("thread: disconnected.");
-                break LightStatus::Off;
+            } else {
+                println!("channel disconnected");
+                light_status = LightStatus::Off;
+                break;
             }
         }
+        light_status
     });
-
     handle
 }
 
@@ -74,9 +81,11 @@ fn main() {
     let (s, r) = unbounded();
 
     let light = spawn_light_thread(r);
+    s.send(LightMsg::On);
     s.send(LightMsg::ChangeColor(245, 45, 45));
     s.send(LightMsg::ChangeColor(204, 0, 204));
-    s.send(LightMsg::TurnOff);
+    s.send(LightMsg::Off);
+    s.send(LightMsg::Disconnect);
 
     light.join();
 }
