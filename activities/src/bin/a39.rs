@@ -21,6 +21,7 @@
 //   by telling the thread to self-terminate
 // * Use `cargo test --bin a39` to test your program to ensure all cases are covered
 
+use colored::Colorize;
 use crossbeam_channel::{unbounded, Receiver};
 use std::thread::{self, JoinHandle};
 
@@ -43,8 +44,8 @@ fn spawn_light_thread(receiver: Receiver<LightMsg>) -> JoinHandle<LightStatus> {
         match receiver.recv() {
             Ok(msg) => match msg {
                 LightMsg::ChangeColor(r, g, b) => {
-                    println!("Color: {:?}, {:?}, {:?}", r, g, b);
-                    break LightStatus::On;
+                    println!("{}", "The color changed".truecolor(r, g, b));
+                    LightStatus::On;
                 }
                 LightMsg::Disconnect => {
                     println!("Disconnect");
@@ -52,7 +53,7 @@ fn spawn_light_thread(receiver: Receiver<LightMsg>) -> JoinHandle<LightStatus> {
                 }
                 LightMsg::TurnOn => {
                     println!("Turn on");
-                    break LightStatus::On;
+                    LightStatus::On;
                 }
                 LightMsg::TurnOff => {
                     println!("Turn off");
@@ -69,7 +70,16 @@ fn spawn_light_thread(receiver: Receiver<LightMsg>) -> JoinHandle<LightStatus> {
     handle
 }
 
-fn main() {}
+fn main() {
+    let (s, r) = unbounded();
+
+    let light = spawn_light_thread(r);
+    s.send(LightMsg::ChangeColor(245, 45, 45));
+    s.send(LightMsg::ChangeColor(204, 0, 204));
+    s.send(LightMsg::TurnOff);
+
+    light.join();
+}
 
 #[cfg(test)]
 mod test {
