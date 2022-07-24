@@ -31,7 +31,7 @@ enum RgbError {
     #[error("hex colors must begin with a hash")]
     MissingHash,
     #[error("failed to parse hex digit: {0}")]
-    ParseError(std::num::ParseIntError),
+    ParseError(#[from] std::num::ParseIntError),
     #[error("invalid hex color length (must be 6)")]
     LengthError,
 }
@@ -54,12 +54,6 @@ impl TryFrom<&str> for Rgb {
             u8::from_str_radix(&hex[5..=6], 16)?,
         );
         Ok(Self(r, g, b))
-    }
-}
-
-impl From<std::num::ParseIntError> for RgbError {
-    fn from(err: std::num::ParseIntError) -> Self {
-        Self::ParseError(err)
     }
 }
 
