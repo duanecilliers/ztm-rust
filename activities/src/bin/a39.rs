@@ -28,6 +28,8 @@ enum LightMsg {
     // Add additional variants needed to complete the exercise
     ChangeColor(u8, u8, u8),
     Disconnect,
+    TurnOn,
+    TurnOff,
 }
 
 enum LightStatus {
@@ -37,6 +39,34 @@ enum LightStatus {
 
 fn spawn_light_thread(receiver: Receiver<LightMsg>) -> JoinHandle<LightStatus> {
     // Add code here to spawn a thread to control the light bulb
+    let handle = thread::spawn(move || loop {
+        match receiver.recv() {
+            Ok(msg) => match msg {
+                LightMsg::ChangeColor(r, g, b) => {
+                    println!("Color: {:?}, {:?}, {:?}", r, g, b);
+                    break LightStatus::On;
+                }
+                LightMsg::Disconnect => {
+                    println!("Disconnect");
+                    break LightStatus::Off;
+                }
+                LightMsg::TurnOn => {
+                    println!("Turn on");
+                    break LightStatus::On;
+                }
+                LightMsg::TurnOff => {
+                    println!("Turn off");
+                    break LightStatus::Off;
+                }
+            },
+            Err(e) => {
+                println!("thread: disconnected.");
+                break LightStatus::Off;
+            }
+        }
+    });
+
+    handle
 }
 
 fn main() {}
