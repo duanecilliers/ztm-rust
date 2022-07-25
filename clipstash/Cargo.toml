@@ -15,4 +15,5 @@ serde_json = "1"
 thiserror = "1"
 chrono = { version = "0.4", features = ["serde"] }
 uuid = { version = "0.8", features = ["serde", "v4"] }
-derive_more = "0.99"
+derive_more = { version = "0.99" }
+rand = "0.8"
