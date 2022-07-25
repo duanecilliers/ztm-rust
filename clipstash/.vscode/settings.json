@@ -1,4 +1,6 @@
 {
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
     "rust-analyzer.server.extraEnv": {
         "DATABASE_URL": "sqlite:data.db"
     }
