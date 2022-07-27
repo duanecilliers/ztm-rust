@@ -2,7 +2,7 @@ use crate::web::ctx;
 
 #[derive(Debug, thiserror::Error)]
 pub enum RenderError {
-    #[error("Something")]
+    #[error("Render error")]
     Render(#[from] handlebars::RenderError),
 }
 
