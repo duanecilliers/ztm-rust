@@ -10,7 +10,7 @@ use uuid::Uuid;
 #[derive(Debug, thiserror::Error)]
 pub enum DataError {
     #[error("database error: {0}")]
-    DataBase(#[from] sqlx::Error),
+    Database(#[from] sqlx::Error),
 }
 
 pub type AppDatabase = Database<Sqlite>;
