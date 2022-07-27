@@ -1,3 +1,6 @@
+pub mod action;
+pub mod ask;
+
 use crate::{ClipError, DataError};
 use sqlx::Error;
 
@@ -10,7 +13,7 @@ pub enum ServiceError {
     #[error("not found")]
     NotFound,
     #[error("permissions not met: {0}")]
-    PermissionEror(String),
+    PermissionError(String),
 }
 
 impl From<DataError> for ServiceError {
