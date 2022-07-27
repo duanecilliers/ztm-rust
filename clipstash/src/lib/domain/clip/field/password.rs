@@ -20,8 +20,8 @@ impl Password {
         }
     }
 
-    pub fn into_inner(self) -> Self {
-        Self(self.0)
+    pub fn into_inner(self) -> Option<String> {
+        self.0
     }
 
     pub fn has_password(&self) -> bool {
